@@ -35,60 +35,60 @@
           data-hash="first-slide"
           data-title="Drago's Charbroiled Steak Recipe"
         >
-          <div class="link-main-page-container">
-            <!-- Link image -->
-            <div class="image-container-for-portraits-desktop-link">
-              <div class="swiper-zoom-container">
+          <div class="swiper-zoom-container">
+            <div class="link-main-page-container">
+              <!-- Link image -->
+              <div class="image-container-for-portraits-desktop-link">
                 <img
                   src="../assets/steak.jpg"
                   class="link-img"
                   alt="Charbroiled steak image"
                 />
               </div>
-            </div>
-            <!-- Holds title, description, url, save link and open link buttons -->
-            <div class="link-container">
-              <p class="link-title">Drago's Charbroiled Steak Recipe</p>
-              <p class="link-description">
-                This recipe for charbroiled steak was created by Tommy Cicero of
-                Drago's Restaurant in New Orleans.
-              </p>
-              <p class="link-clickable-text-wrapper">
-                <a
-                  href="https://www.saveur.com"
-                  rel="noopener noreferrer"
-                  class="link-clickable-text"
-                  aria-label="Link to Saveur's website"
-                  >SAVEUR.COM</a
-                >
-              </p>
-              <div class="link-btn-row">
-                <!-- Open Link Button -->
-                <a
-                  href="https://www.saveur.com"
-                  class="link-button"
-                  role="button"
-                  aria-label="Open link to Saveur website"
-                  rel="noopener noreferrer"
-                >
-                  <img
-                    src="../assets/jump_link_white.png"
-                    alt="link-icon"
-                    class="button-icon"
-                  />
-                  <span>Open Link</span>
-                </a>
-                <!-- Save Link Button -->
-                <a
-                  href="#"
-                  class="link-button save-button"
-                  role="button"
-                  aria-label="Save link"
-                  rel="noopener noreferrer"
-                >
-                  <img src="../assets/k_logo.png" alt="Kohono icon" />
-                  <span class="save-link-text">Save Link</span>
-                </a>
+              <!-- Holds title, description, url, save link and open link buttons -->
+              <div class="link-container">
+                <p class="link-title">Drago's Charbroiled Steak Recipe</p>
+                <p class="link-description">
+                  This recipe for charbroiled steak was created by Tommy Cicero
+                  of Drago's Restaurant in New Orleans.
+                </p>
+                <p class="link-clickable-text-wrapper">
+                  <a
+                    href="https://www.saveur.com"
+                    rel="noopener noreferrer"
+                    class="link-clickable-text"
+                    aria-label="Link to Saveur's website"
+                    >SAVEUR.COM</a
+                  >
+                </p>
+                <div class="link-btn-row">
+                  <!-- Open Link Button -->
+                  <a
+                    href="https://www.saveur.com"
+                    class="link-button"
+                    role="button"
+                    aria-label="Open link to Saveur website"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      src="../assets/jump_link_white.png"
+                      alt="link-icon"
+                      class="button-icon"
+                    />
+                    <span>Open Link</span>
+                  </a>
+                  <!-- Save Link Button -->
+                  <a
+                    href="#"
+                    class="link-button save-button"
+                    role="button"
+                    aria-label="Save link"
+                    rel="noopener noreferrer"
+                  >
+                    <img src="../assets/k_logo.png" alt="Kohono icon" />
+                    <span class="save-link-text">Save Link</span>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -385,10 +385,16 @@
 
         // Variable to track zoom state
         let isZoomedIn = false;
-        let currentZoomedSlide = null;
-        let hasFirstAutoplayTransition = false;
 
-        // Initialize Swiper
+        // **Select the Options Button**
+        const optionsButton = document.querySelector(".options-btn");
+        if (!optionsButton) {
+          console.error(
+            "Options Button not found. Please check the class name."
+          );
+        }
+
+        // Initialize Swiper with Autoplay Disabled Initially
         const swiper = new Swiper(".mySwiper", {
           direction: "vertical", // Swiper Vertical - direction for phones
           loop: false, // Disable looping
@@ -396,9 +402,9 @@
           spaceBetween: 0, // No space between slides
           autoplay: false, // Disable autoplay on initialization
           zoom: {
-            maxRatio: 5, // Allows users to zoom in up to 5x
-            minRatio: 1, // Prevents zooming out below the original size
-            toggle: false, // Disable toggle on double-click to avoid unintended zoom resets
+            maxRatio: 8, // Increased from 5 to 8 to allow deeper zoom
+            minRatio: 1, // Ensures images don't shrink below original size
+            toggle: false, // Disable toggle on double click
           },
           breakpoints: {
             601: {
@@ -420,15 +426,6 @@
               if (dropdownMenu.classList.contains("open")) {
                 closeDropdownMenu();
               }
-
-              // Handle autoplay delay adjustments after the first transition
-              if (swiper.autoplay.running && !hasFirstAutoplayTransition) {
-                hasFirstAutoplayTransition = true;
-                swiper.params.autoplay.delay = 2500; // Set delay for subsequent slides
-                console.log(
-                  "Autoplay delay set to 2500ms for subsequent slides."
-                );
-              }
             },
             // Event when swiper reaches the beginning
             reachBeginning: function () {
@@ -442,8 +439,6 @@
               updateAutoplayButtonState(); // Update the Play/Pause button to show Play icon
               showUIElements(); // Restore UI elements when autoplay ends
               updateArrowStyles();
-              // Reset the autoplay transition flag when autoplay stops
-              hasFirstAutoplayTransition = false;
             },
             // Event when a slide change transition starts
             slideChangeTransitionStart: function () {
@@ -462,15 +457,7 @@
                   if (swiper.autoplay.running) {
                     swiper.autoplay.stop();
                     console.log("Autoplay stopped due to zoom.");
-                    // Reset the autoplay transition flag when autoplay stops
-                    hasFirstAutoplayTransition = false;
                   }
-
-                  // Disable Swiper swipe navigation
-                  swiper.allowTouchMove = false;
-
-                  // Add 'zoomed-in' class to the current slide for CSS adjustments
-                  slideEl.classList.add("zoomed-in");
 
                   // Hide UI elements except Exit Zoom button
                   hideUIElementsForZoom();
@@ -484,6 +471,46 @@
                   // Ensure Exit Zoom button remains in its original position and style
                   exitZoomBtn.classList.remove("hidden");
                   exitZoomBtn.style.zIndex = "1000"; // Ensure it stays on top
+
+                  // Adjust the swiper-zoom-container to cover full viewport
+                  const zoomContainers = document.querySelectorAll(
+                    ".swiper-zoom-container"
+                  );
+                  zoomContainers.forEach((container) => {
+                    container.style.width = "100vw";
+                    container.style.height = "100vh";
+                    container.style.display = "flex";
+                    container.style.justifyContent = "center";
+                    container.style.alignItems = "center";
+                  });
+
+                  // Adjust image styles to ensure full coverage without distortion
+                  const images = document.querySelectorAll(
+                    ".swiper-zoom-container img"
+                  );
+                  images.forEach((img) => {
+                    img.style.maxWidth = "none"; // Remove max-width to prevent shrinking
+                    img.style.maxHeight = "none"; // Remove max-height to prevent shrinking
+                    img.style.width = "auto"; // Allow width to adjust naturally
+                    img.style.height = "auto"; // Allow height to adjust naturally
+                    img.style.objectFit = "cover"; // Ensure the image covers the container
+                    img.style.transformOrigin = "top center"; // Lock top of the image to top of viewport
+                  });
+
+                  // Disable Swiping
+                  swiper.allowTouchMove = false;
+                  // Prevent panning by adding touchmove event listeners
+                  const handleTouchMove = function (e) {
+                    if (e.touches.length <= 1) {
+                      e.preventDefault();
+                    }
+                  };
+                  images.forEach((img) => {
+                    img.addEventListener("touchmove", handleTouchMove, {
+                      passive: false,
+                    });
+                    img.dataset.preventPanning = "true";
+                  });
                 }
               } else {
                 // Exiting zoomed-in state
@@ -491,24 +518,59 @@
                   isZoomedIn = false;
                   console.log("Exiting zoomed-in state.");
 
-                  // Enable Swiper swipe navigation
-                  swiper.allowTouchMove = true;
-
-                  // Remove 'zoomed-in' class from the current slide
-                  slideEl.classList.remove("zoomed-in");
-
                   // Show UI elements
                   showUIElementsAfterZoom();
 
                   // Show Link Container if Previously Hidden
                   showLinkContainerIfHidden();
 
-                  // Hide the Exit Zoom button
+                  // Hide Exit Zoom button
                   exitZoomBtn.classList.add("hidden");
                   exitZoomBtn.style.zIndex = ""; // Reset z-index
 
+                  // Reset the swiper-zoom-container to original size
+                  const zoomContainers = document.querySelectorAll(
+                    ".swiper-zoom-container"
+                  );
+                  zoomContainers.forEach((container) => {
+                    container.style.width = "";
+                    container.style.height = "";
+                    container.style.display = "";
+                    container.style.justifyContent = "";
+                    container.style.alignItems = "";
+                  });
+
+                  // Reset image styles
+                  const images = document.querySelectorAll(
+                    ".swiper-zoom-container img"
+                  );
+                  images.forEach((img) => {
+                    img.style.maxWidth = "";
+                    img.style.maxHeight = "";
+                    img.style.width = "";
+                    img.style.height = "";
+                    img.style.objectFit = "";
+                    img.style.transformOrigin = "";
+                  });
+
+                  // Remove touchmove event listeners to allow panning again
+                  const handleTouchMove = function (e) {
+                    if (e.touches.length <= 1) {
+                      e.preventDefault();
+                    }
+                  };
+                  images.forEach((img) => {
+                    if (img.dataset.preventPanning === "true") {
+                      img.removeEventListener("touchmove", handleTouchMove);
+                      delete img.dataset.preventPanning;
+                    }
+                  });
                   // Show number-of-items-btn and update the counter
                   numberOfItemsBtn.classList.remove("hidden-element");
+                  updateCounter(swiper);
+
+                  // Enable Swiping
+                  swiper.allowTouchMove = true;
                 }
               }
             },
@@ -561,32 +623,25 @@
         // Initialize Play/Pause buttons to show Play icon
         updateAutoplayButtonState();
 
-        // Function to toggle autoplay and update button appearance with delays
+        // Function to toggle autoplay and update button appearance
         function toggleAutoplay() {
           if (swiper.autoplay.running) {
             swiper.autoplay.stop();
             console.log("Autoplay stopped.");
             // Show UI elements when autoplay is stopped
             showUIElements();
-            // Reset the autoplay transition flag when autoplay stops
-            hasFirstAutoplayTransition = false;
           } else {
-            // Implement a 500ms delay before starting autoplay
-            setTimeout(() => {
-              swiper.params.autoplay = {
-                delay: 500, // Initial delay of 500ms before first slide
-                disableOnInteraction: false,
-                pauseOnMouseEnter: true,
-              };
-              swiper.autoplay.start();
-              console.log("Autoplay started after 500ms delay.");
-              // Hide left and right arrows and other UI elements when autoplay starts
-              hideUIElementsForAutoplay();
-              updateAutoplayButtonState();
-              // Reset the autoplay transition flag when autoplay starts
-              hasFirstAutoplayTransition = false;
-            }, 500);
+            swiper.params.autoplay = {
+              delay: 3000, // Autoplay delay in milliseconds
+              disableOnInteraction: false, // Autoplay won't be disabled after user interactions
+              pauseOnMouseEnter: true, // Autoplay will pause on mouse enter
+            };
+            swiper.autoplay.start();
+            console.log("Autoplay started.");
+            // Hide left and right arrows and other UI elements when autoplay starts
+            hideUIElementsForAutoplay();
           }
+          updateAutoplayButtonState();
         }
 
         // Attach event listeners to all Play/Pause buttons
@@ -596,6 +651,17 @@
             toggleAutoplay();
           });
         });
+
+        // Function to stop autoplay and update buttons
+        function stopAutoplayAndUpdateButtons() {
+          if (swiper.autoplay.running) {
+            swiper.autoplay.stop();
+            updateAutoplayButtonState();
+            console.log("Autoplay stopped via interaction.");
+            // Show UI elements when autoplay is stopped
+            showUIElements();
+          }
+        }
 
         // Function to update arrow styles (for disabling)
         function updateArrowStyles() {
@@ -922,7 +988,6 @@
             button.classList.add("hidden-element")
           );
           // Hide options button
-          const optionsButton = document.querySelector(".options-btn");
           if (optionsButton) {
             optionsButton.classList.add("hidden-element");
           }
@@ -946,7 +1011,6 @@
             button.classList.remove("hidden-element")
           );
           // Show options button
-          const optionsButton = document.querySelector(".options-btn");
           if (optionsButton) {
             optionsButton.classList.remove("hidden-element");
           }
@@ -972,7 +1036,7 @@
           const dropdownWidth = dropdownMenu.offsetWidth;
 
           // **Adjust the top position with a slight upward offset (e.g., -5px) if needed**
-          const topOffset = -5; 
+          const topOffset = -5; // Modify this value as needed
           const adjustedTop = rect.top + topOffset;
 
           // Position the dropdown menu so that its top right corner aligns with the options button's top right corner
@@ -1093,14 +1157,6 @@
           });
         }
 
-        // **Prevent Event Propagation for Newly Added media-item-title Elements**
-        // This ensures that clicks on media-item-title elements don't bubble up to the document listener
-        document.querySelectorAll(".media-item-title").forEach((title) => {
-          title.addEventListener("click", function (event) {
-            event.stopPropagation();
-          });
-        });
-
         // **New: Close the edit caption popup and dropdown when clicking outside**
         document.addEventListener("click", function (event) {
           // Define selectors for interactive elements
@@ -1217,8 +1273,6 @@
           updateAutoplayButtonState();
           // When autoplay stops, show 'number-of-items-btn'
           numberOfItemsBtn.classList.remove("hidden-element");
-          // **Reset the autoplay transition flag when autoplay stops**
-          hasFirstAutoplayTransition = false;
         });
 
         // Function to update the pencil-title-row content based on the active slide's data-title
@@ -1329,7 +1383,6 @@
         updateTitleRowContent(swiper.activeIndex);
 
         // **Event Listener for the Options Button to Toggle the Dropdown**
-        const optionsButton = document.querySelector(".options-btn");
         if (optionsButton) {
           optionsButton.addEventListener("click", function (e) {
             e.stopPropagation(); // Prevent the click from bubbling up
@@ -1341,8 +1394,6 @@
               // Update autoplay button state and UI visibility
               updateAutoplayButtonState();
               showUIElements();
-              // **Reset the autoplay transition flag when autoplay stops**
-              hasFirstAutoplayTransition = false;
             }
 
             if (dropdownMenu.classList.contains("open")) {
@@ -1365,71 +1416,27 @@
           });
         }
 
-        // Function to stop autoplay and update buttons
-        function stopAutoplayAndUpdateButtons() {
-          if (swiper.autoplay.running) {
-            swiper.autoplay.stop();
-            updateAutoplayButtonState();
-            console.log("Autoplay stopped via interaction.");
-            // Show UI elements when autoplay is stopped
-            showUIElements();
-            // **Reset the autoplay transition flag when autoplay stops**
-            hasFirstAutoplayTransition = false;
-          }
+        // **Add Event Listeners to media-item-title Elements**
+        function addMediaItemTitleListeners() {
+          const mediaItemTitles =
+            document.querySelectorAll(".media-item-title");
+          mediaItemTitles.forEach((title) => {
+            // Avoid adding multiple event listeners to the same element
+            if (!title.dataset.listenerAdded) {
+              title.addEventListener("click", handleCaptionEditClick);
+              title.addEventListener("touchstart", handleCaptionEditClick);
+              title.dataset.listenerAdded = "true";
+            }
+          });
         }
 
-        // Prevent double-tap zoom on mobile devices
-        let lastTouchEnd = 0;
-        document.addEventListener(
-          "touchend",
-          function (event) {
-            const now = new Date().getTime();
-            if (now - lastTouchEnd <= 300) {
-              event.preventDefault();
-            }
-            lastTouchEnd = now;
-          },
-          false
-        );
-
-        // Simplified Zoom Event Handling to remove manual style manipulations
-        swiper.on(
-          "zoomChange",
-          function (swiperInstance, scale, imageEl, slideEl) {
-            if (scale > 1) {
-              // Zoomed in
-              exitZoomBtn.classList.remove("hidden");
-              swiperInstance.allowTouchMove = false;
-            } else {
-              // Zoomed out
-              exitZoomBtn.classList.add("hidden");
-              swiperInstance.allowTouchMove = true;
-            }
-          }
-        );
-
-        // Ensure that on zooming in linked slides, only the image is affected
-        // (Removed to prevent conflicts with image sizing)
-
-        // Other functions remain unchanged...
-
-        // Function to toggle visibility of items
-        // (Already defined above)
-
-        // Function to hide/show UI elements for autoplay and zoom
-        // (Already defined above)
-
-        // Function to update title row content
-        // (Already defined above)
-
-        // Prevent event propagation when clicking inside interactive elements
-        // (Already handled above)
-
-        // Close popups and dropdowns when clicking outside
-        // (Already handled above)
-
-        // Handle keyboard navigation
-        // (Already handled above)
+        // **Prevent Event Propagation for Newly Added media-item-title Elements**
+        // This ensures that clicks on media-item-title elements don't bubble up to the document listener
+        document.querySelectorAll(".media-item-title").forEach((title) => {
+          title.addEventListener("click", function (event) {
+            event.stopPropagation();
+          });
+        });
       });
     </script>
   </body>

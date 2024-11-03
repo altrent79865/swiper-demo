@@ -8,7 +8,6 @@ html,
 body {
   position: relative;
   height: 100svh;
-  height: 100vh; /* Fallback, but svh was also needed to prevent zooming on a long touch */
   overflow: hidden;
 }
 
@@ -44,15 +43,15 @@ body {
   align-items: center;
   background-color: black;
   height: 100svh;
-  height: 100vh; /* Fallback, but svh was also needed to prevent zooming on a long touch */
-  width: 100vw;
+  width: 100%;
   /* Apply below to make images a long touch not open native features */
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   /* To work with Swiper Zoom */
-  touch-action: none;
+  touch-action: auto;
+  overflow: auto;
   position: relative;
   overflow: hidden;
 }
@@ -69,7 +68,7 @@ body {
   margin-top: 10px;
   cursor: default;
   overflow: visible;
-  z-index: 300;
+  z-index: 200;
 }
 
 /* Hides the elements detailed in javascript when clicking on page and toggling the page.  It will toggle the close-btn, title, pencil, add a caption, options-btn, play / pause button, left, right and down arrows, and counter.  Keeps clean look on page. */
@@ -391,7 +390,7 @@ body {
 }
 
 .swiper-zoom-container {
-  /* text-align: left; */
+  text-align: left;
   /* To fix link zoom*/
   width: 100%;
   height: 100%;
@@ -401,12 +400,6 @@ body {
   overflow: hidden;
 }
 
-/* Ensure that images within Swiper slides do not exceed their containers */
-.swiper-slide .swiper-zoom-container img {
-  max-width: 100%;
-  max-height: 100%;
-}
-
 /* Layout of Images */
 img.swiper-slide {
   display: block;
@@ -414,18 +407,18 @@ img.swiper-slide {
 }
 
 .portrait-img {
-  width: 100%;
-  height: 100%;
-  /* max-height: 100svh; */
+  height: 100svh;
+  max-height: 100svh;
+  width: auto;
   object-fit: cover;
   object-position: center 25%;
   display: block;
 }
 
 .landscape-img {
-  width: auto;
+  width: 100vw;
   height: 100%;
-  /* max-height: 100svh; */
+  max-height: 100svh;
   object-fit: contain;
   display: block;
 }
@@ -442,7 +435,6 @@ img.swiper-slide {
 
 .youtube-portrait {
   max-height: 90svh;
-  max-height: 90vh; /* Fallback, but svh was also needed to prevent zooming on a long touch */
   height: auto;
   width: auto;
   max-width: 100%;
@@ -474,7 +466,6 @@ img.swiper-slide {
 .link-img {
   width: 100%;
   height: 55svh;
-  height: 55vh; /* Fallback, but svh was also needed to prevent zooming on a long touch */
   object-fit: cover;
   display: block;
   position: absolute;
@@ -491,9 +482,7 @@ img.swiper-slide {
   position: relative;
   padding-left: 20px;
   margin-top: 55svh;
-  margin-top: 55vh; /* Fallback, but svh was also needed to prevent zooming on a long touch */
   height: calc(100svh - 45svh);
-  height: calc(100vh - 45vh);
   overflow-y: auto;
 }
 
@@ -509,7 +498,6 @@ img.swiper-slide {
   font-weight: bold;
   letter-spacing: 0.3px;
   margin-top: 3svh;
-  margin-top: 3vh; /* Fallback, but svh was also needed to prevent zooming on a long touch */
   margin-bottom: 1rem;
 }
 
@@ -829,6 +817,12 @@ img.swiper-slide {
 
 /* Media Queries for Phones */
 @media (max-width: 600px) {
+  .swiper-zoom-container > canvas,
+  .swiper-zoom-container > img,
+  .swiper-zoom-container > svg {
+    object-fit: cover;
+  }
+
   /* Animate first slide to slide in from the bottom for screens up to 600px width. */
 
   /* Container for text related to a link media item, specifically, link-title, link-description, url clickable text and open and save link buttons  */
@@ -841,18 +835,13 @@ img.swiper-slide {
     animation-delay: 0.1s;
     display: flex;
     flex-direction: column;
-    /* align-self: flex-start; */
-    align-items: center;
-    height: 100%;
-    width: 100%;
-    padding: 0;
-    margin: 0;
+    align-self: flex-start;
   }
 
-  /* .link-container {
+  .link-container {
     height: auto;
     padding-top: 0;
-  } */
+  }
 
   .edit-caption-popup {
     flex-direction: column;
@@ -879,47 +868,6 @@ img.swiper-slide {
   .right-arrow-btn {
     display: none;
   }
-
-  /* THIS TO END OF THIS MEDIA QUERY WAS FROM LAST CHANGE */
-  .swiper-zoom-container {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-  }
-
-  /* Ensure portrait images fully cover the container */
-  .portrait-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-  }
-
-  /* Optional: Adjust .link-main-page-container to not interfere with image sizing */
-  .link-main-page-container {
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-    padding: 0;
-    margin: 0;
-  }
-
-  /* Optional: Hide the link-container on small screens to maximize image coverage */
-  .swiper-slide .link-container {
-    display: none;
-  }
-
-  /* Ensure that slides without link-container also cover full height */
-  .swiper-slide {
-    height: 100svh;
-    height: 100vh; /* Fallback, but svh was also needed to prevent zooming on a long touch */
-    width: 100vw;
-  }
 }
 
 @media (min-width: 601px) {
@@ -935,10 +883,7 @@ img.swiper-slide {
     gap: 20px;
     width: 90%;
     background-color: black;
-    max-height: calc(100svh - 120px);
-    max-height: calc(
-      100vh - 120px
-    ); /* Fallback, but svh was also needed to prevent zooming on a long touch */
+    max-height: calc(100vh - 120px);
     padding-top: -8px;
   }
 
@@ -964,7 +909,6 @@ img.swiper-slide {
   /* This makes layout better on a device that is wide, but not tall, specifically a phone in landscape mode. */
   .link-img {
     height: 60svh;
-    height: 60vh; /* Fallback, but svh was also needed to prevent zooming on a long touch */
     object-fit: cover;
     object-position: center 35%;
     position: initial;
@@ -980,12 +924,12 @@ img.swiper-slide {
   }
 
   /* This below fixes a portrait image from looking skinny on an ipad in portrait mode.  */
-  /* .portrait-img {
+  .portrait-img {
     height: 100%;
     width: 100%;
     object-fit: contain;
     display: block;
-  } */
+  }
 
   /* Hides down arrow button on larger screens.  Up arrow is not visible on any screen size. */
   .down-arrow-btn,
