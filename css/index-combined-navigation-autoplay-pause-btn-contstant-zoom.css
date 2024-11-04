@@ -1,3 +1,4 @@
+/* This was completed code before working on zoom feature */
 * {
   margin: 0;
   padding: 0;
@@ -7,8 +8,7 @@
 html,
 body {
   position: relative;
-  height: 100svh;
-  overflow: hidden;
+  height: 100%;
 }
 
 body {
@@ -43,17 +43,12 @@ body {
   align-items: center;
   background-color: black;
   height: 100svh;
-  width: 100%;
-  /* Apply below to make images a long touch not open native features */
+  width: 100vw;
+  /* Apply below to make a long touch not open native features */
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-  /* To work with Swiper Zoom */
-  touch-action: auto;
-  overflow: auto;
-  position: relative;
-  overflow: hidden;
 }
 
 /* Title Row at top of page */
@@ -358,50 +353,8 @@ body {
     /* Secondary shadow */ 0px 0px 5px rgba(0, 0, 0, 0.25); /* Glow effect */
 }
 
-/* Exit Zoom button visibility for Swiper Zoom feature */
-/* Oblong background part of area that appears behind Exit Zoom Button. */
-.exit-zoom-button {
-  position: fixed;
-  bottom: 16px;
-  right: 9px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0 2px;
-  height: 28px;
-  background-color: rgba(0, 0, 0, 0.3);
-  border-radius: 14px;
-  border: none;
-  cursor: pointer;
-  z-index: 400;
-}
-
-.exit-zoom-button-text {
-  color: white;
-  letter-spacing: 0.09rem;
-  padding: 0 8px;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5),
-    /* Primary shadow */ 2px 2px 4px rgba(0, 0, 0, 0.3),
-    /* Secondary shadow */ 0px 0px 5px rgba(0, 0, 0, 0.25); /* Glow effect */
-}
-
-.exit-zoom-button.hidden {
-  display: none;
-}
-
-.swiper-zoom-container {
-  text-align: left;
-  /* To fix link zoom*/
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-}
-
 /* Layout of Images */
-img.swiper-slide {
+.swiper-slide img {
   display: block;
   width: 100%;
 }
@@ -417,7 +370,7 @@ img.swiper-slide {
 
 .landscape-img {
   width: 100vw;
-  height: 100%;
+  height: auto;
   max-height: 100svh;
   object-fit: contain;
   display: block;
@@ -468,7 +421,7 @@ img.swiper-slide {
   height: 55svh;
   object-fit: cover;
   display: block;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -596,7 +549,7 @@ img.swiper-slide {
   tap-highlight-color: transparent;
 }
 
-/* Arrows for navigation of slides.  Note the up-arrow-btn is always hidden and we only use down-arrow-btn to navigate slides, but creates problems with swiper vertical functionality when removing up-arrow-btn. */
+/* Arrows for navigation of slides.  Note the up-arrow-btn is always hidden and we only use down-arrow-btn to navigate slides, but it's possible it could create problems with swiper vertical functionality when removing up-arrow-btn. */
 .left-arrow-btn,
 .right-arrow-btn,
 .down-arrow-btn,
@@ -671,8 +624,7 @@ img.swiper-slide {
 .autoplay-toggle::after,
 .close-btn::before,
 .options-btn::before,
-.pencil-click-area,
-.exit-zoom-button::before {
+.pencil-click-area {
   position: absolute;
   background: transparent;
   pointer-events: auto;
@@ -708,15 +660,6 @@ img.swiper-slide {
   bottom: -20px;
   left: -20px;
   right: -20px;
-}
-
-/* Increases clickable / touch area of Exit Zoom button. */
-.exit-zoom-button::before {
-  content: "";
-  top: -45px;
-  bottom: -35px;
-  left: -90px;
-  right: -35px;
 }
 
 /* Increases clickable / touch area of pencil and Add a Caption. */
@@ -784,27 +727,13 @@ img.swiper-slide {
   display: none;
 }
 
-.swiper-slide .link-container.hidden-element {
-  display: none !important;
-}
-
 .image-container-for-portraits-desktop {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 100%;
+  height: 100svh;
   position: relative;
-  margin: 0;
-  padding: 0;
-}
-
-/* To animate first slide sliding in from the right side when screen sizes are 601px or larger width */
-@keyframes slide-in {
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
 }
 
 /* To animate first slide sliding in from the bottom when screen sizes are up to 600px width */
@@ -815,18 +744,19 @@ img.swiper-slide {
   }
 }
 
+/* To animate first slide sliding in from the right side when screen sizes are 601px or larger width */
+@keyframes slide-in {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 /* Media Queries for Phones */
 @media (max-width: 600px) {
-  .swiper-zoom-container > canvas,
-  .swiper-zoom-container > img,
-  .swiper-zoom-container > svg {
-    object-fit: cover;
-  }
-
   /* Animate first slide to slide in from the bottom for screens up to 600px width. */
 
   /* Container for text related to a link media item, specifically, link-title, link-description, url clickable text and open and save link buttons  */
-
   .link-main-page-container {
     /* Start with elements fully transparent and off-screen at the bottom */
     opacity: 0;
@@ -918,15 +848,12 @@ img.swiper-slide {
   .image-container-for-portraits-desktop-link {
     flex: 1;
     max-height: 100%;
-    width: 100%;
-    height: 100%;
-    position: relative;
   }
 
   /* This below fixes a portrait image from looking skinny on an ipad in portrait mode.  */
   .portrait-img {
-    height: 100%;
-    width: 100%;
+    height: auto;
+    width: auto;
     object-fit: contain;
     display: block;
   }
