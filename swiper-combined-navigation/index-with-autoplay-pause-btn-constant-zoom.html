@@ -35,60 +35,60 @@
           data-hash="first-slide"
           data-title="Drago's Charbroiled Steak Recipe"
         >
-          <div class="swiper-zoom-container">
-            <div class="link-main-page-container">
-              <!-- Link image -->
-              <div class="image-container-for-portraits-desktop-link">
+          <div class="link-main-page-container">
+            <!-- Link image -->
+            <div class="image-container-for-portraits-desktop-link">
+              <div class="swiper-zoom-container">
                 <img
                   src="../assets/steak.jpg"
                   class="link-img"
                   alt="Charbroiled steak image"
                 />
               </div>
-              <!-- Holds title, description, url, save link and open link buttons -->
-              <div class="link-container">
-                <p class="link-title">Drago's Charbroiled Steak Recipe</p>
-                <p class="link-description">
-                  This recipe for charbroiled steak was created by Tommy Cicero
-                  of Drago's Restaurant in New Orleans.
-                </p>
-                <p class="link-clickable-text-wrapper">
-                  <a
-                    href="https://www.saveur.com"
-                    rel="noopener noreferrer"
-                    class="link-clickable-text"
-                    aria-label="Link to Saveur's website"
-                    >SAVEUR.COM</a
-                  >
-                </p>
-                <div class="link-btn-row">
-                  <!-- Open Link Button -->
-                  <a
-                    href="https://www.saveur.com"
-                    class="link-button"
-                    role="button"
-                    aria-label="Open link to Saveur website"
-                    rel="noopener noreferrer"
-                  >
-                    <img
-                      src="../assets/jump_link_white.png"
-                      alt="link-icon"
-                      class="button-icon"
-                    />
-                    <span>Open Link</span>
-                  </a>
-                  <!-- Save Link Button -->
-                  <a
-                    href="#"
-                    class="link-button save-button"
-                    role="button"
-                    aria-label="Save link"
-                    rel="noopener noreferrer"
-                  >
-                    <img src="../assets/k_logo.png" alt="Kohono icon" />
-                    <span class="save-link-text">Save Link</span>
-                  </a>
-                </div>
+            </div>
+            <!-- Holds title, description, url, save link and open link buttons -->
+            <div class="link-container">
+              <p class="link-title">Drago's Charbroiled Steak Recipe</p>
+              <p class="link-description">
+                This recipe for charbroiled steak was created by Tommy Cicero of
+                Drago's Restaurant in New Orleans.
+              </p>
+              <p class="link-clickable-text-wrapper">
+                <a
+                  href="https://www.saveur.com"
+                  rel="noopener noreferrer"
+                  class="link-clickable-text"
+                  aria-label="Link to Saveur's website"
+                  >SAVEUR.COM</a
+                >
+              </p>
+              <div class="link-btn-row">
+                <!-- Open Link Button -->
+                <a
+                  href="https://www.saveur.com"
+                  class="link-button"
+                  role="button"
+                  aria-label="Open link to Saveur website"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src="../assets/jump_link_white.png"
+                    alt="link-icon"
+                    class="button-icon"
+                  />
+                  <span>Open Link</span>
+                </a>
+                <!-- Save Link Button -->
+                <a
+                  href="#"
+                  class="link-button save-button"
+                  role="button"
+                  aria-label="Save link"
+                  rel="noopener noreferrer"
+                >
+                  <img src="../assets/k_logo.png" alt="Kohono icon" />
+                  <span class="save-link-text">Save Link</span>
+                </a>
               </div>
             </div>
           </div>
@@ -415,6 +415,9 @@
             },
           },
         });
+
+        // Add swiper.update() here to ensure Swiper adjusts its layout on initialization
+        swiper.update();
 
         // Function to update the slide counter
         function updateCounter(swiper) {
@@ -1090,3 +1093,5 @@
     </script>
   </body>
 </html>
+
+document.body.insertAdjacentHTML('beforeend', '<img src="data:image/png;base64, data:image/png;base64,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" alt="Image description" style="width: 24px; vertical-align: middle; margin-right: 8px;"> Public Audience');
