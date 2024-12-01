@@ -713,7 +713,7 @@ body {
 /* Increases clickable / touch area of Exit Zoom button. */
 .exit-zoom-button::before {
   content: "";
-  top: -40px;
+  top: -45px;
   bottom: -35px;
   left: -90px;
   right: -35px;
@@ -817,13 +817,10 @@ body {
 
 /* Media Queries for Phones */
 @media (max-width: 600px) {
-  
-  .landscape-img {
-    width: 100vw;
-    height: 100%;
-    max-height: 100svh;
-    object-fit: contain;
-    display: block;
+  .swiper-zoom-container > canvas,
+  .swiper-zoom-container > img,
+  .swiper-zoom-container > svg {
+    object-fit: cover;
   }
 
   /* Animate first slide to slide in from the bottom for screens up to 600px width. */
@@ -875,11 +872,7 @@ body {
 
 @media (min-width: 601px) {
   /* Animate first slide to slide in from the right side for screens 601px and wider. */
-  /* .swiper-zoom-container > canvas,
-  .swiper-zoom-container > img,
-  .swiper-zoom-container > svg {
-    object-fit: contain;
-  } */
+
   .link-main-page-container {
     /* Start with elements fully transparent and off-screen to the right */
     opacity: 0;

@@ -394,9 +394,6 @@
           );
         }
 
-        // **Flag to track if the first autoplay transition has occurred**
-        let hasFirstAutoplayTransition = false;
-
         // Initialize Swiper with Autoplay Disabled Initially
         const swiper = new Swiper(".mySwiper", {
           direction: "vertical", // Swiper Vertical - direction for phones
@@ -429,15 +426,6 @@
               if (dropdownMenu.classList.contains("open")) {
                 closeDropdownMenu();
               }
-
-              // **Handle autoplay delay adjustments after the first transition**
-              if (swiper.autoplay.running && !hasFirstAutoplayTransition) {
-                hasFirstAutoplayTransition = true;
-                swiper.params.autoplay.delay = 2500; // Set delay for subsequent slides
-                console.log(
-                  "Autoplay delay set to 2500ms for subsequent slides."
-                );
-              }
             },
             // Event when swiper reaches the beginning
             reachBeginning: function () {
@@ -451,8 +439,6 @@
               updateAutoplayButtonState(); // Update the Play/Pause button to show Play icon
               showUIElements(); // Restore UI elements when autoplay ends
               updateArrowStyles();
-              // **Reset the autoplay transition flag when autoplay stops**
-              hasFirstAutoplayTransition = false;
             },
             // Event when a slide change transition starts
             slideChangeTransitionStart: function () {
@@ -471,15 +457,7 @@
                   if (swiper.autoplay.running) {
                     swiper.autoplay.stop();
                     console.log("Autoplay stopped due to zoom.");
-                    // **Reset the autoplay transition flag when autoplay stops**
-                    hasFirstAutoplayTransition = false;
                   }
-
-                  // Disable Swiper swipe navigation
-                  swiper.allowTouchMove = false;
-
-                  // Add 'zoomed-in' class to the current slide for CSS adjustments
-                  slideEl.classList.add("zoomed-in");
 
                   // Hide UI elements except Exit Zoom button
                   hideUIElementsForZoom();
@@ -494,20 +472,36 @@
                   exitZoomBtn.classList.remove("hidden");
                   exitZoomBtn.style.zIndex = "1000"; // Ensure it stays on top
 
-                  // Prevent panning outside the image
-                  imageEl.style.transform = "translate(0, 0)";
+                  // Adjust the swiper-zoom-container to cover full viewport
+                  const zoomContainers = document.querySelectorAll(
+                    ".swiper-zoom-container"
+                  );
+                  zoomContainers.forEach((container) => {
+                    container.style.width = "100vw";
+                    container.style.height = "100vh";
+                    container.style.display = "flex";
+                    container.style.justifyContent = "center";
+                    container.style.alignItems = "center";
+                  });
+
+                  // Adjust image styles to ensure full coverage without distortion
+                  const images = document.querySelectorAll(
+                    ".swiper-zoom-container img"
+                  );
+                  images.forEach((img) => {
+                    img.style.maxWidth = "100%";
+                    img.style.maxHeight = "100%";
+                    img.style.objectFit = "contain"; // Change to "cover" if preferred
+                  });
+
+                  // Disable Swiping
+                  swiper.allowTouchMove = false;
                 }
               } else {
                 // Exiting zoomed-in state
                 if (isZoomedIn) {
                   isZoomedIn = false;
                   console.log("Exiting zoomed-in state.");
-
-                  // Enable Swiper swipe navigation
-                  swiper.allowTouchMove = true;
-
-                  // Remove 'zoomed-in' class from the current slide
-                  slideEl.classList.remove("zoomed-in");
 
                   // Show UI elements
                   showUIElementsAfterZoom();
@@ -519,8 +513,34 @@
                   exitZoomBtn.classList.add("hidden");
                   exitZoomBtn.style.zIndex = ""; // Reset z-index
 
+                  // Reset the swiper-zoom-container to original size
+                  const zoomContainers = document.querySelectorAll(
+                    ".swiper-zoom-container"
+                  );
+                  zoomContainers.forEach((container) => {
+                    container.style.width = "";
+                    container.style.height = "";
+                    container.style.display = "";
+                    container.style.justifyContent = "";
+                    container.style.alignItems = "";
+                  });
+
+                  // Reset image styles
+                  const images = document.querySelectorAll(
+                    ".swiper-zoom-container img"
+                  );
+                  images.forEach((img) => {
+                    img.style.maxWidth = "";
+                    img.style.maxHeight = "";
+                    img.style.objectFit = "";
+                  });
+
                   // Show number-of-items-btn and update the counter
                   numberOfItemsBtn.classList.remove("hidden-element");
+                  updateCounter(swiper);
+
+                  // Enable Swiping
+                  swiper.allowTouchMove = true;
                 }
               }
             },
@@ -573,32 +593,25 @@
         // Initialize Play/Pause buttons to show Play icon
         updateAutoplayButtonState();
 
-        // Function to toggle autoplay and update button appearance with delays
+        // Function to toggle autoplay and update button appearance
         function toggleAutoplay() {
           if (swiper.autoplay.running) {
             swiper.autoplay.stop();
             console.log("Autoplay stopped.");
             // Show UI elements when autoplay is stopped
             showUIElements();
-            // **Reset the autoplay transition flag when autoplay stops**
-            hasFirstAutoplayTransition = false;
           } else {
-            // Implement a 500ms delay before starting autoplay
-            setTimeout(() => {
-              swiper.params.autoplay = {
-                delay: 500, // Initial delay of 500ms before first slide
-                disableOnInteraction: false,
-                pauseOnMouseEnter: true,
-              };
-              swiper.autoplay.start();
-              console.log("Autoplay started after 500ms delay.");
-              // Hide left and right arrows and other UI elements when autoplay starts
-              hideUIElementsForAutoplay();
-              updateAutoplayButtonState();
-              // **Reset the autoplay transition flag when autoplay starts**
-              hasFirstAutoplayTransition = false;
-            }, 500);
+            swiper.params.autoplay = {
+              delay: 3000, // Autoplay delay in milliseconds
+              disableOnInteraction: false, // Autoplay won't be disabled after user interactions
+              pauseOnMouseEnter: true, // Autoplay will pause on mouse enter
+            };
+            swiper.autoplay.start();
+            console.log("Autoplay started.");
+            // Hide left and right arrows and other UI elements when autoplay starts
+            hideUIElementsForAutoplay();
           }
+          updateAutoplayButtonState();
         }
 
         // Attach event listeners to all Play/Pause buttons
@@ -617,8 +630,6 @@
             console.log("Autoplay stopped via interaction.");
             // Show UI elements when autoplay is stopped
             showUIElements();
-            // **Reset the autoplay transition flag when autoplay stops**
-            hasFirstAutoplayTransition = false;
           }
         }
 
@@ -1116,14 +1127,6 @@
           });
         }
 
-        // **Prevent Event Propagation for Newly Added media-item-title Elements**
-        // This ensures that clicks on media-item-title elements don't bubble up to the document listener
-        document.querySelectorAll(".media-item-title").forEach((title) => {
-          title.addEventListener("click", function (event) {
-            event.stopPropagation();
-          });
-        });
-
         // **New: Close the edit caption popup and dropdown when clicking outside**
         document.addEventListener("click", function (event) {
           // Define selectors for interactive elements
@@ -1240,8 +1243,6 @@
           updateAutoplayButtonState();
           // When autoplay stops, show 'number-of-items-btn'
           numberOfItemsBtn.classList.remove("hidden-element");
-          // **Reset the autoplay transition flag when autoplay stops**
-          hasFirstAutoplayTransition = false;
         });
 
         // Function to update the pencil-title-row content based on the active slide's data-title
@@ -1363,8 +1364,6 @@
               // Update autoplay button state and UI visibility
               updateAutoplayButtonState();
               showUIElements();
-              // **Reset the autoplay transition flag when autoplay stops**
-              hasFirstAutoplayTransition = false;
             }
 
             if (dropdownMenu.classList.contains("open")) {
@@ -1386,6 +1385,28 @@
             console.log("Options dropdown closed via close button.");
           });
         }
+
+        // **Add Event Listeners to media-item-title Elements**
+        function addMediaItemTitleListeners() {
+          const mediaItemTitles =
+            document.querySelectorAll(".media-item-title");
+          mediaItemTitles.forEach((title) => {
+            // Avoid adding multiple event listeners to the same element
+            if (!title.dataset.listenerAdded) {
+              title.addEventListener("click", handleCaptionEditClick);
+              title.addEventListener("touchstart", handleCaptionEditClick);
+              title.dataset.listenerAdded = "true";
+            }
+          });
+        }
+
+        // **Prevent Event Propagation for Newly Added media-item-title Elements**
+        // This ensures that clicks on media-item-title elements don't bubble up to the document listener
+        document.querySelectorAll(".media-item-title").forEach((title) => {
+          title.addEventListener("click", function (event) {
+            event.stopPropagation();
+          });
+        });
       });
     </script>
   </body>
